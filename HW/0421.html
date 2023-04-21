@@ -1,0 +1,50 @@
+<html>
+<head>
+<style>
+body
+{
+    margin:0px;
+}
+#nav
+{
+    background-color: black;
+    width: 40px;
+    height:100%;
+}
+#navMain
+{
+    overflow:hidden;
+    padding-left:40px;
+    padding-top:40px;
+}
+#nav a
+{
+    color: white;
+    white-space: nowrap;
+    text-decoration: none;
+}
+</style>
+</head>
+<body>
+<div id="nav" onmouseover="navWide()" onmouseout="navNarrow()">
+    <div id="navMain">
+        <a href="aboutme">咩吉子</a><br>
+        <a href="facebook">facebook</a><br>
+        <a href="ig">ig</a><br>
+        <a href="others">其他</a><br>
+    </div>
+</div>
+<script>
+    function navWide()
+    {
+        let nav=ducument.getElementById('nav')
+        nav.style.width='250px';
+    }
+    function navNarrow()
+    {
+        let nav=ducument.getElementById('nav')
+        nav.style.width='20px';
+    }
+</script>
+</body>
+</html>
