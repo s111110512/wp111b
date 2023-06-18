@@ -1,102 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>翻卡牌遊戲</title>
+  <title>打地鼠遊戲</title>
   <style>
-    .card {
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 300px;
+      margin: 0 auto;
+    }
+
+    .game-tile {
       width: 100px;
-      height: 150px;
-      perspective: 600px;
-      margin: 10px;
-      float: left;
-    }
-
-    .card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.6s;
-    }
-
-    .card.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .card-face {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-    }
-
-    .card-front {
-      background-image: url('dice.png');
-      
-    }
-
-    .card-back {
-      background-image: url('back.png');
-      background-size: cover;
+      height: 100px;
+      background-color: #eee;
+      border: 1px solid #999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
     }
   </style>
   <script>
-    var flippedCards = [];
-    var matches = 0;
+    var score = 0;
+    var time = 30;
 
-    function flipCard(card) {
-      if (card.classList.contains("flipped")) {
-        return; // 已經翻開的卡片不處理
+    function startGame() {
+      score = 0;
+      time = 30;
+      updateScore();
+      updateTime();
+
+      var tiles = document.getElementsByClassName('game-tile');
+      for (var i = 0; i < tiles.length; i++) {
+        tiles[i].addEventListener('click', increaseScore);
       }
 
-      card.classList.toggle("flipped");
-      flippedCards.push(card);
+      var countdown = setInterval(function() {
+        time--;
+        updateTime();
 
-      if (flippedCards.length === 2) {
-        var card1 = flippedCards[0];
-        var card2 = flippedCards[1];
-
-        var image1 = card1.getAttribute("data-image");
-        var image2 = card2.getAttribute("data-image");
-
-        if (image1 === image2) {
-          // 卡片匹配成功
-          matches++;
-
-          if (matches === 5) {
-            // 遊戲結束
-            alert("遊戲結束！");
-          }
-          
-          flippedCards = [];
-        } else {
-          // 卡片匹配失敗，延遲翻回
-          setTimeout(function() {
-            card1.classList.remove("flipped");
-            card2.classList.remove("flipped");
-            flippedCards = [];
-          }, 1000);
+        if (time <= 0) {
+          clearInterval(countdown);
+          endGame();
         }
+      }, 1000);
+    }
+
+    function increaseScore() {
+      score++;
+      this.classList.remove('game-tile-active');
+      updateScore();
+    }
+
+    function updateScore() {
+      document.getElementById('score').innerText = score;
+    }
+
+    function updateTime() {
+      document.getElementById('time').innerText = time;
+    }
+
+    function endGame() {
+      alert('遊戲結束！您的得分是：' + score);
+      var tiles = document.getElementsByClassName('game-tile');
+      for (var i = 0; i < tiles.length; i++) {
+        tiles[i].removeEventListener('click', increaseScore);
       }
     }
   </script>
 </head>
 <body>
-  <div class="card" onclick="flipCard(this)" data-image="dice.png">
-    <div class="card-inner">
-      <div class="card-face card-front"></div>
-      <div class="card-face card-back" style="background-image: url('dice.png');"></div>
-    </div>
+  <h1>打地鼠遊戲</h1>
+  <div class="game-container">
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile" onclick="increaseScore()"></div>
   </div>
-
-  <div class="card" onclick="flipCard(this)" data-image="mapele.png">
-    <div class="card-inner">
-      <div class="card-face card-front"></div>
-      <div class="card-face card-back" style="background-image: url('mapele.png');"></div>
-    </div>
+  <div>
+    <p>得分: <span id="score">0</span></p>
+    <p>剩餘時間: <span id="time">30</span> 秒</p>
+    <button onclick="startGame()">開始遊戲</button>
   </div>
-
-  <!-- 添加更多的卡牌 -->
-
 </body>
 </html>
