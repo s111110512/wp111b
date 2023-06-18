@@ -15,17 +15,23 @@
       width: 100px;
       height: 100px;
       background-color: #eee;
-      border: 1px solid #6f6f6f;
+      border: 1px solid #5c5c5c;
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 24px;
       cursor: pointer;
     }
+
+    .active {
+      background-color: rgb(255, 125, 125);
+    }
   </style>
   <script>
     var score = 0;
     var time = 10;
+    var activeTileIndex = -1;
+    var tiles = [];
 
     function startGame() {
       score = 0;
@@ -33,9 +39,9 @@
       updateScore();
       updateTime();
 
-      var tiles = document.getElementsByClassName('game-tile');
+      tiles = document.getElementsByClassName('game-tile');
       for (var i = 0; i < tiles.length; i++) {
-        tiles[i].addEventListener('click', increaseScore);
+        tiles[i].addEventListener('click', handleTileClick);
       }
 
       var countdown = setInterval(function() {
@@ -47,12 +53,26 @@
           endGame();
         }
       }, 1000);
+
+      showRandomActiveTile();
     }
 
-    function increaseScore() {
-      score++;
-      this.classList.remove('game-tile-active');
-      updateScore();
+    function showRandomActiveTile() {
+      if (activeTileIndex >= 0) {
+        tiles[activeTileIndex].classList.remove('active');
+      }
+
+      activeTileIndex = Math.floor(Math.random() * tiles.length);
+      tiles[activeTileIndex].classList.add('active');
+    }
+
+    function handleTileClick() {
+      if (this.classList.contains('active')) {
+        score++;
+        updateScore();
+      }
+
+      showRandomActiveTile();
     }
 
     function updateScore() {
@@ -65,9 +85,8 @@
 
     function endGame() {
       alert('遊戲結束！您的得分是：' + score);
-      var tiles = document.getElementsByClassName('game-tile');
       for (var i = 0; i < tiles.length; i++) {
-        tiles[i].removeEventListener('click', increaseScore);
+        tiles[i].removeEventListener('click', handleTileClick);
       }
     }
   </script>
@@ -75,15 +94,15 @@
 <body>
   <h1>打地鼠遊戲</h1>
   <div class="game-container">
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
-    <div class="game-tile" onclick="increaseScore()"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
+    <div class="game-tile"></div>
   </div>
   <div>
     <p>得分: <span id="score">0</span></p>
